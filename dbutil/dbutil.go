@@ -3,6 +3,8 @@ package dbutil
 import (
 	// "fmt"
 	"log"
+	"os"
+
 	// "github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -31,7 +33,14 @@ var err error
 
 func ConnectDB() {
 
-	DBcon, err = gorm.Open("postgres", "host=localhost port=5432 user=superroot dbname=gotest password=123")
+	var hostip = os.Getenv("HOSTIP")
+	var dbuser = os.Getenv("DBUSER")
+	var dbpassword = os.Getenv("DBPASSWORD")
+
+	var connstr = "host= " + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
+
+	DBcon, err = gorm.Open("postgres", connstr)
+	println(connstr)
 	// NOTE: See we’re using = to assign the global var
 	// instead of := which would assign it only in this function
 
