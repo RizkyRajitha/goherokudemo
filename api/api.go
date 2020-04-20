@@ -10,7 +10,7 @@ import (
 	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	uuid "github.com/satori/go.uuid"
 
-	// "github.com/RizkyRajitha/goherokudemo/uuid"
+
 
 	"github.com/gorilla/context"
 )
@@ -66,7 +66,7 @@ func OfflinesyncAddroute(w http.ResponseWriter, r *http.Request) {
 
 	var booking dbutil.Notes
 	noteid := uuid.NewV4().String()
-	booking.Id = noteid //uuid.Must(uuid.NewV4()).String() //uuid.UUID()
+	booking.Id = noteid 
 	booking.UserId = uerid
 	// booking.Updated = time.Now().Format(time.RFC3339)
 	// booking.Created = time.Now().Format(time.RFC3339)

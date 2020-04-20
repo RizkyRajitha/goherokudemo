@@ -11,7 +11,7 @@ import (
 	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	uuid "github.com/satori/go.uuid"
 
-	// "github.com/RizkyRajitha/goherokudemo/uuid"
+
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
