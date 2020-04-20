@@ -1,14 +1,17 @@
 package auth
 
 import (
-	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
-	"github.com/RizkyRajitha/goherokudemo/uuid"
+
+	"github.com/RizkyRajitha/goherokudemo/dbutil"
+	uuid "github.com/satori/go.uuid"
+
+	// "github.com/RizkyRajitha/goherokudemo/uuid"
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
@@ -123,7 +126,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var user dbutil.User
 	var userdummy Userreg
-	user.UserId = uuid.UUID()
+	userid := uuid.NewV4().String() //uuid.Must(uuid.NewV4()).String()
+	user.UserId = userid        //uuid.Must(uuid.NewV4()).String()
 	user.Created = time.Now().Format(time.RFC3339)
 
 	json.Unmarshal(reqBody, &userdummy)

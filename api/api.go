@@ -1,13 +1,16 @@
 package api
 
 import (
-	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-	"github.com/RizkyRajitha/goherokudemo/uuid"
+
+	"github.com/RizkyRajitha/goherokudemo/dbutil"
+	uuid "github.com/satori/go.uuid"
+
+	// "github.com/RizkyRajitha/goherokudemo/uuid"
 
 	"github.com/gorilla/context"
 )
@@ -33,7 +36,8 @@ func Addroute(w http.ResponseWriter, r *http.Request) {
 	uerid := userid12121.(string)
 
 	var booking dbutil.Notes
-	booking.Id = uuid.UUID()
+	noteid := uuid.NewV4().String() //uuid.Must(uuid.NewV4()).String()
+	booking.Id = noteid             //uuid.UUID()
 	booking.UserId = uerid
 	booking.Updated = time.Now().Format(time.RFC3339)
 	booking.Created = time.Now().Format(time.RFC3339)
@@ -61,7 +65,8 @@ func OfflinesyncAddroute(w http.ResponseWriter, r *http.Request) {
 	uerid := userid12121.(string)
 
 	var booking dbutil.Notes
-	booking.Id = uuid.UUID()
+	noteid := uuid.NewV4().String()
+	booking.Id = noteid //uuid.Must(uuid.NewV4()).String() //uuid.UUID()
 	booking.UserId = uerid
 	// booking.Updated = time.Now().Format(time.RFC3339)
 	// booking.Created = time.Now().Format(time.RFC3339)
