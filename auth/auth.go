@@ -51,7 +51,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Msg string `json:"msg"`
 		}
 
-		println("duplicate email")
+		// println("duplicate email")
 		w.WriteHeader(http.StatusNotFound)
 		var payload nosuerErr
 		payload.Msg = "Invalid_email"
@@ -102,10 +102,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 			type tokenPayload struct {
 				Token string `json:"token"`
+				Msg string `json:"msg"`
 			}
 
 			var payload tokenPayload
 			payload.Token = tokenString
+			payload.Msg = "success"
 			w.WriteHeader(http.StatusOK)
 			json.NewEncoder(w).Encode(payload)
 
@@ -128,6 +130,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	var userdummy Userreg
 	userid := uuid.NewV4().String() //uuid.Must(uuid.NewV4()).String()
 	user.UserId = userid        //uuid.Must(uuid.NewV4()).String()
+	user.Active = true
 	user.Created = time.Now().Format(time.RFC3339)
 
 	json.Unmarshal(reqBody, &userdummy)

@@ -18,6 +18,7 @@ type Notes struct {
 	Updated  string `json:"updated"`
 	Title    string `json:"title"`
 	Category string `json:"category"`
+	Active   bool   `json:"active"`
 }
 
 type User struct {
@@ -26,6 +27,7 @@ type User struct {
 	Hash    string `json:"hash"`
 	Created string `json:"created"`
 	Name    string `json:"name"`
+	Active  bool   `json:"active"`
 }
 
 var DBcon *gorm.DB
@@ -37,10 +39,12 @@ func ConnectDB() {
 	var dbuser = os.Getenv("DBUSER")
 	var dbpassword = os.Getenv("DBPASSWORD")
 
-	var connstr = "host= " + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
+	var connstrprod = "host= " + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
 
-	DBcon, err = gorm.Open("postgres", connstr)
-	println(connstr)
+	// var connstrdev = "host= " + "localhost" + " port=5432 user=" + "superroot" + " dbname=" + "gotest" + " password=" + "123"
+
+	DBcon, err = gorm.Open("postgres", connstrprod)
+	// println(connstrdev)
 	// NOTE: See we’re using = to assign the global var
 	// instead of := which would assign it only in this function
 
