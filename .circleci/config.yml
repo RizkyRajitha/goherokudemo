@@ -55,8 +55,10 @@ jobs:
       # # specify any bash command here prefixed with `run: `
 
   deploy:
-    machine: true
+    docker:
+      - image: circleci/golang:1.11
     steps:
+      - checkout
       - run: ls
       - run: git remote show origin
       - heroku/deploy-via-git
