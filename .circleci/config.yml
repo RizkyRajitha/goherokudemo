@@ -24,7 +24,7 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/RizkyRajitha/goherokudemo
+    # working_directory: /go/src/github.com/RizkyRajitha/goherokudemo
     steps:
       - checkout
       # specify any bash command here prefixed with `run: `
@@ -69,9 +69,7 @@ jobs:
           command: |
             sleep 5
             curl --retry 10 --retry-delay 1 -X GET --header "Content-Type: plain/html"  http://localhost:8080/
-  
-
-
+            
   deploy:
     - heroku/deploy-via-git
 
