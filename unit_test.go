@@ -74,6 +74,11 @@ func initDb() {
 		dbhost, dbport,
 		dbuser, dbpass, dbname)
 
+	println("host=%s port=%s user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		dbhost, dbport,
+		dbuser, dbpass, dbname)
+
 	db, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
 		panic(err)
