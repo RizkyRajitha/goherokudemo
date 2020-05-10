@@ -14,7 +14,7 @@ import (
 	// "github.com/RizkyRajitha/goherokudemo/api"
 	// "github.com/RizkyRajitha/goherokudemo/api"
 	// "github.com/RizkyRajitha/goherokudemo/auth"
-	// "github.com/RizkyRajitha/goherokudemo/dbutil"
+	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	// "github.com/dgrijalva/jwt-go"
 )
 
@@ -26,7 +26,7 @@ func TestSignup(t *testing.T) {
 
 	// // req, err := http.NewRequest("PUT", "/entry", bytes.NewBuffer(jsonStr))
 
-	// dbutil.ConnectDB()
+	dbutil.ConnectDB()
 
 	// req, err := http.NewRequest("POST", "/signup", bytes.NewBuffer(jsonStr))
 	// if err != nil {
