@@ -15,9 +15,10 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/postgres:10.12
         # environment: # environment variables for primary container
-          # POSTGRES_PASSWORD: test1234
-          # POSTGRES_USER: circleci-demo-go
-          # POSTGRES_DB: circleci-demo-go
+          POSTGRES_PASSWORD: test1234
+          POSTGRES_USER: circleci-demo-go
+          POSTGRES_DB: circleci-demo-go
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
       - run:
