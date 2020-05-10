@@ -38,7 +38,7 @@ func GetDbConnString() string {
 	var hostip = os.Getenv("HOSTIP")
 	var dbuser = os.Getenv("DBUSER")
 	var dbpassword = os.Getenv("DBPASSWORD")
-	var connstr = "host= " + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
+	var connstr = "host=" + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
 	// Set a default port if there is nothing in the environment
 	if hostip == "" {
 
