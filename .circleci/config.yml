@@ -5,10 +5,10 @@
 version: 2.1
 orbs:
   heroku: circleci/heroku@0.0.10
+
 jobs:
   build:
     docker:
-      # specify the version
       - image: circleci/golang:1.9
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -18,60 +18,55 @@ jobs:
           POSTGRES_PASSWORD: test1234
           POSTGRES_USER: circleci-demo-go
           POSTGRES_DB: circleci-demo-go
-
-      
-    #### TEMPLATE_NOTE: go expects specific checkout path representing url
-    #### expecting it in the form of
-    ####   /go/src/github.com/circleci/go-tool
-    ####   /go/src/bitbucket.org/circleci/go-tool
-    # working_directory: /go/src/github.com/RizkyRajitha/goherokudemo
     steps:
       - checkout
-      # specify any bash command here prefixed with `run: `
       - run: go mod download
-      
-
       - run:
-        name: Waiting for Postgres to be ready
-        command: |
-          for i in `seq 1 10`;
-          do
-            nc -z localhost 5432 && echo Success && exit 0
-            echo -n .
-            sleep 1
-          done
-          echo Failed waiting for Postgres && exit 1
-      
-      - run:
-        name: Run unit tests
-        environment: # environment variables for the database url and path to migration files
-          DBPASSWORD: test1234
-          DBUSER: circleci-demo-go 
-          HOSTIP: localhost
-          # DBPASSWORD: ""
-
-        # Store the results of our tests in the $TEST_RESULTS directory
-        command: |
-          run: go test -v
-
-      - run:
-        name: Start service
-        environment:
-          DBPASSWORD: test1234
-          DBUSER: circleci-demo-go 
-          HOSTIP: localhost
-
-        command: go run main.go
-        background: true # keep service running and proceed to next step
-  
-      - run:
-          name: Validate service is working
+          name: Waiting for Postgres to be ready
           command: |
-            sleep 5
-            curl --retry 10 --retry-delay 1 -X GET --header "Content-Type: plain/html"  http://localhost:8080/
-            
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 5432 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for Postgres && exit 1
+      - run:
+          name: Run unit tests
+          environment: # environment variables for the database url and path to migration files
+            DBPASSWORD: test1234
+            DBUSER: circleci-demo-go
+            HOSTIP: localhost
+            # DBPASSWORD: ""
+          # Store the results of our tests in the $TEST_RESULTS directory
+          command: |
+            run: go test -v
+      # # specify any bash command here prefixed with `run: `
+      
+      
   deploy:
-    - heroku/deploy-via-git
+    machine: true
+    steps:
+      - heroku/deploy-via-git
+  #### TEMPLATE_NOTE: go expects specific checkout path representing url
+  #### expecting it in the form of
+  ####   /go/src/github.com/circleci/go-tool
+  ####   /go/src/bitbucket.org/circleci/go-tool
+  # working_directory: /go/src/github.com/RizkyRajitha/goherokudemo
+
+  #   - run:
+  #     name: Start service
+  #     environment:
+  #       DBPASSWORD: test1234
+  #       DBUSER: circleci-demo-go
+  #       HOSTIP: localhost
+  #     command: go run main.go
+  #     background: true # keep service running and proceed to next step
+  #   - run:
+  #       name: Validate service is working
+  #       command: |
+  #         sleep 5
+  #         curl --retry 10 --retry-delay 1 -X GET --header "Content-Type: plain/html"  http://localhost:8080/
 
 workflows:
   version: 2
@@ -87,10 +82,7 @@ workflows:
             branches:
               # Only deploy on pushes to the master branch
               only: master
-
-
-
 # workflows:
-#   heroku_deploy:
-#     jobs:
-#       - heroku/deploy-via-git
+# heroku_deploy:
+#   jobs:
+#     - heroku/deploy-via-git
