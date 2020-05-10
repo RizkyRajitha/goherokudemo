@@ -74,8 +74,8 @@ func initDb() {
 		dbhost, dbport,
 		dbuser, dbpass, dbname)
 
-	println("host=%s port=%s user=%s "+
-		"password=%s dbname=%s sslmode=disable",
+	println("host=%v port=%v user=%v "+
+		"password=%v dbname=%v sslmode=disable",
 		dbhost, dbport,
 		dbuser, dbpass, dbname)
 
