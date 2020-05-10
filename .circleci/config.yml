@@ -20,7 +20,10 @@ jobs:
           POSTGRES_DB: circleci-demo-go
     steps:
       - checkout
-      - run: go mod download
+      - run: 
+          name: Run unit tests  
+          command: |
+            go mod download
       - run:
           name: Waiting for Postgres to be ready
           command: |
@@ -40,7 +43,7 @@ jobs:
             # DBPASSWORD: ""
           # Store the results of our tests in the $TEST_RESULTS directory
           command: |
-            run: go test -v
+            go test -v
       # # specify any bash command here prefixed with `run: `
       
       
