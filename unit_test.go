@@ -13,7 +13,7 @@ import (
 	"testing"
 
 	// "github.com/RizkyRajitha/goherokudemo/api"
-	"github.com/RizkyRajitha/goherokudemo/api"
+	// "github.com/RizkyRajitha/goherokudemo/api"
 	"github.com/RizkyRajitha/goherokudemo/auth"
 	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	// "github.com/dgrijalva/jwt-go"
