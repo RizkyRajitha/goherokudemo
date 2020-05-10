@@ -245,40 +245,40 @@ func TestLoginInvalidPassword(t *testing.T) {
 //     })
 // }
 
-func TestGetallNotes(t *testing.T) {
+// func TestGetallNotes(t *testing.T) {
 
-	// var jsonStr = []byte(`{"email":"test123" , "password":"1234" }`)
+// 	// var jsonStr = []byte(`{"email":"test123" , "password":"1234" }`)
 
-	// req, err := http.NewRequest("PUT", "/entry", bytes.NewBuffer(jsonStr))
+// 	// req, err := http.NewRequest("PUT", "/entry", bytes.NewBuffer(jsonStr))
 
-	dbutil.ConnectDB()
+// 	dbutil.ConnectDB()
 
-	req, err := http.NewRequest("GET", "/api/getall", nil)
-	// println(Token)
-	// req.Header.Set("name", "value")
-	req.Header.Set("Authorization", Token)
-	if err != nil {
-		t.Fatal(err)
-	}
+// 	req, err := http.NewRequest("GET", "/api/getall", nil)
+// 	// println(Token)
+// 	// req.Header.Set("name", "value")
+// 	req.Header.Set("Authorization", Token)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
 
-	rr := httptest.NewRecorder()
+// 	rr := httptest.NewRecorder()
 
-	handler := http.HandlerFunc( (api.Getall))
+// 	handler := http.HandlerFunc( (api.Getall))
 
-	handler.ServeHTTP(rr, req)
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
+// 	handler.ServeHTTP(rr, req)
+// 	if status := rr.Code; status != http.StatusOK {
+// 		t.Errorf("handler returned wrong status code: got %v want %v",
+// 			status, http.StatusOK)
+// 	}
 
-	// Check the response body is what we expect.
-	expected := `{"msg":"Invalid_password"}` + "\n"
-	print((expected))
-	print(rr.Body.String())
+// 	// Check the response body is what we expect.
+// 	expected := `{"msg":"Invalid_password"}` + "\n"
+// 	print((expected))
+// 	print(rr.Body.String())
 
-	println(rr.Body.String() == (expected))
-	if rr.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v",
-			rr.Body.String(), expected)
-	}
-}
+// 	println(rr.Body.String() == (expected))
+// 	if rr.Body.String() != expected {
+// 		t.Errorf("handler returned unexpected body: got %v want %v",
+// 			rr.Body.String(), expected)
+// 	}
+// }
