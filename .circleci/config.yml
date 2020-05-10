@@ -83,14 +83,14 @@ workflows:
   build:
     jobs:
       - build
-      - deploy:
-          requires:
-            # Run after all tests have passed
-            - build
-          filters:
-            branches:
-              # Only deploy on pushes to the master branch
-              only: master
+      # - deploy:
+      #     requires:
+      #       # Run after all tests have passed
+      #       - build
+      #     filters:
+      #       branches:
+      #         # Only deploy on pushes to the master branch
+      #         only: master
 # workflows:
 # heroku_deploy:
 #   jobs:

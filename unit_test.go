@@ -4,6 +4,7 @@ import (
 	// "bytes"
 	"database/sql"
 	"fmt"
+	"os"
 
 	// "context"
 	// "encoding/json"
@@ -55,12 +56,12 @@ func TestSignup(t *testing.T) {
 
 }
 
-const (
-	dbhost = "localhost"
+var (
+	dbhost = os.Getenv("HOSTIP")
 	dbport = "5432"
-	dbuser = "circleci-demo-go"
-	dbpass = "test1234"
-	dbname = "circleci-demo-go"
+	dbuser = os.Getenv("DBUSER")
+	dbpass = os.Getenv("DBPASSWORD")
+	dbname = os.Getenv("DBUSER")
 )
 
 var db *sql.DB
