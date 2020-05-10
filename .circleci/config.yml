@@ -58,7 +58,7 @@ jobs:
     machine: true
     steps:
       - run: ls
-      - run: git info
+      - run: git remote show origin
       - heroku/deploy-via-git
   #### TEMPLATE_NOTE: go expects specific checkout path representing url
   #### expecting it in the form of
