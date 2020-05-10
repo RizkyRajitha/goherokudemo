@@ -45,9 +45,9 @@ jobs:
       - run:
           name: Run unit tests
           environment: # environment variables for the database url and path to migration files
-            DBPASSWORD: test1234
-            DBUSER: circleci-demo-go
-            HOSTIP: localhost
+            DBPASSWORD: "test1234"
+            DBUSER: "circleci-demo-go"
+            HOSTIP: "localhost"
             # DBPASSWORD: ""
           # Store the results of our tests in the $TEST_RESULTS directory
           command: |
