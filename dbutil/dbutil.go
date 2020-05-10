@@ -46,6 +46,8 @@ func GetDbConnString() string {
 
 		// port = "8080"
 		println("INFO: No DB environment variable detected, defaulting to " + connstr)
+	} else {
+		println("INFO: DB environment variable detected, defaulting to " + connstr)
 	}
 	// println("INFO: DB environment variable detected, defaulting to " + connstr)
 	return connstr

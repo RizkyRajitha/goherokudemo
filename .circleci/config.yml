@@ -21,7 +21,7 @@ jobs:
     steps:
       - checkout
       - run: 
-          name: Run unit tests  
+          name: Download dependencies  
           command: |
             go mod download
       - run:
