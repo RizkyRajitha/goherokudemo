@@ -6,12 +6,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	uuid "github.com/satori/go.uuid"
-
-
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
@@ -27,6 +27,16 @@ type Credentials struct {
 type Claims struct {
 	UserId string `json:"userid"`
 	jwt.StandardClaims
+}
+
+func GetExpTime() string {
+	var jwtexptime = os.Getenv("JWTEXPTIME")
+	// Set a default port if there is nothing in the environment
+	if jwtexptime == "" {
+		jwtexptime = "6000"
+		fmt.Println("INFO: No JWT EXPIRE TIME environment variable detected, defaulting to " + jwtexptime)
+	}
+	return jwtexptime
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -80,7 +90,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		} else {
 			fmt.Println("all good sir eh !!!111")
 
-			expirationTime := time.Now().Add(600 * time.Minute)
+			jwtexp, err := strconv.Atoi(GetExpTime())
+
+			expirationTime := time.Now().Add(time.Duration(jwtexp) * time.Hour)
+			println("-------------------------------------")
+			print(string(expirationTime.String()))
 			// Create the JWT claims, which includes the username and expiry time
 			claims := &Claims{
 				UserId: user.UserId,
@@ -102,7 +116,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 			type tokenPayload struct {
 				Token string `json:"token"`
-				Msg string `json:"msg"`
+				Msg   string `json:"msg"`
 			}
 
 			var payload tokenPayload
@@ -129,7 +143,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	var user dbutil.User
 	var userdummy Userreg
 	userid := uuid.NewV4().String() //uuid.Must(uuid.NewV4()).String()
-	user.UserId = userid        //uuid.Must(uuid.NewV4()).String()
+	user.UserId = userid            //uuid.Must(uuid.NewV4()).String()
 	user.Active = true
 	user.Created = time.Now().Format(time.RFC3339)
 

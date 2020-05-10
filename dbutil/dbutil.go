@@ -33,17 +33,35 @@ type User struct {
 var DBcon *gorm.DB
 var err error
 
-func ConnectDB() {
+func GetDbConnString() string {
 
 	var hostip = os.Getenv("HOSTIP")
 	var dbuser = os.Getenv("DBUSER")
 	var dbpassword = os.Getenv("DBPASSWORD")
+	var connstr = "host= " + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
+	// Set a default port if there is nothing in the environment
+	if hostip == "" {
 
-	var connstrprod = "host= " + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword
+		connstr = "host= " + "localhost" + " port=5432 user=" + "superroot" + " dbname=" + "gotest" + " password=" + "123"
+
+		// port = "8080"
+		println("INFO: No DB environment variable detected, defaulting to " + connstr)
+	}
+	// println("INFO: DB environment variable detected, defaulting to " + connstr)
+	return connstr
+}
+
+func ConnectDB() {
+
+	// var hostip = os.Getenv("HOSTIP")
+	// var dbuser = os.Getenv("DBUSER")
+	// var dbpassword = os.Getenv("DBPASSWORD")
+
+	var connstr = GetDbConnString()
 
 	// var connstrdev = "host= " + "localhost" + " port=5432 user=" + "superroot" + " dbname=" + "gotest" + " password=" + "123"
 
-	DBcon, err = gorm.Open("postgres", connstrprod)
+	DBcon, err = gorm.Open("postgres", connstr)
 	// println(connstrdev)
 	// NOTE: See we’re using = to assign the global var
 	// instead of := which would assign it only in this function
