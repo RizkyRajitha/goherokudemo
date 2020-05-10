@@ -60,7 +60,7 @@ jobs:
           DBPASSWORD: test1234
           DBUSER: circleci-demo-go 
           HOSTIP: localhost
-          
+
         command: go run main.go
         background: true # keep service running and proceed to next step
   
@@ -92,7 +92,7 @@ workflows:
 
 
 
-workflows:
-  heroku_deploy:
-    jobs:
-      - heroku/deploy-via-git
+# workflows:
+#   heroku_deploy:
+#     jobs:
+#       - heroku/deploy-via-git
