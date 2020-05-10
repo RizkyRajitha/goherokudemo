@@ -21,13 +21,13 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
-      - run:
-          name: Add user to Postgres db
-          command: |
-            sudo -u postgres psql
-            create database myuser;
-            create user myuser with encrypted password 'mypass';
-            grant all privileges on database mydb to myuser;
+      # - run:
+      #     name: Add user to Postgres db
+      #     command: |
+      #       sudo -u postgres psql
+      #       create database myuser;
+      #       create user myuser with encrypted password 'mypass';
+      #       grant all privileges on database mydb to myuser;
       - run:
           name: Download dependencies
           command: |
@@ -45,8 +45,8 @@ jobs:
       - run:
           name: Run unit tests
           environment: # environment variables for the database url and path to migration files
-            DBPASSWORD: mypass
-            DBUSER: myuser
+            DBPASSWORD: test1234
+            DBUSER: circleci-demo-go
             HOSTIP: localhost
             # DBPASSWORD: ""
           # Store the results of our tests in the $TEST_RESULTS directory
