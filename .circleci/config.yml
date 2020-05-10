@@ -14,12 +14,19 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/postgres:10.12
-        environment: # environment variables for primary container
-          POSTGRES_PASSWORD: test1234
-          POSTGRES_USER: circleci-demo-go
-          POSTGRES_DB: circleci-demo-go
+        # environment: # environment variables for primary container
+          # POSTGRES_PASSWORD: test1234
+          # POSTGRES_USER: circleci-demo-go
+          # POSTGRES_DB: circleci-demo-go
     steps:
       - checkout
+      - run:
+          name: Add user to Postgres db
+          command: |
+            sudo -u postgres psql
+            create database myuser;
+            create user myuser with encrypted password 'mypass';
+            grant all privileges on database mydb to myuser;
       - run:
           name: Download dependencies
           command: |
@@ -37,8 +44,8 @@ jobs:
       - run:
           name: Run unit tests
           environment: # environment variables for the database url and path to migration files
-            DBPASSWORD: test1234
-            DBUSER: circleci-demo-go
+            DBPASSWORD: mypass
+            DBUSER: myuser
             HOSTIP: localhost
             # DBPASSWORD: ""
           # Store the results of our tests in the $TEST_RESULTS directory
