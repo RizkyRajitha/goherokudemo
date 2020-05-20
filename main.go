@@ -66,6 +66,7 @@ func main() {
 	userRouter.HandleFunc("/add", api.Addroute).Methods("POST")
 	userRouter.HandleFunc("/offlinesyncadd", api.OfflinesyncAddroute).Methods("POST")
 	userRouter.HandleFunc("/getall", api.Getall).Methods("GET")
+	userRouter.HandleFunc("/gettrashall", api.GetTrashall).Methods("GET")
 	userRouter.HandleFunc("/update", api.Modify).Methods("POST")
 	userRouter.HandleFunc("/changestate", api.Changenotestate).Methods("POST")
 
@@ -74,7 +75,7 @@ func main() {
 	// Serve static files
 
 	buildHandler := http.FileServer(http.Dir("./build"))
-	router.PathPrefix("/").Handler(buildHandler)
+	router.PathPrefix(`/{rest:[a-zA-Z0-9=\-\/]+}`).Handler(buildHandler)
 
 	// staticHandler := http.StripPrefix("/static/", http.FileServer(http.Dir("/build/static")))
 	// router.PathPrefix("/static/").Handler(staticHandler)
