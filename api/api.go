@@ -239,3 +239,93 @@ func Changenotestate(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func Changenotepinnned(w http.ResponseWriter, r *http.Request) {
+
+	type modistrut struct {
+		NoteID string `json:"noteid"`
+		Pinned bool   `json:"pinned"`
+	}
+
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var modnotes modistrut
+
+	var notes dbutil.Notes
+
+	// uptime := time.Now().Format(time.RFC3339)
+	json.Unmarshal(reqBody, &modnotes)
+
+	fmt.Println(modnotes)
+	// println(uptime)
+
+	userid12121 := context.Get(r, "Userid")
+	// println(userid12121.(string))
+	uerid := userid12121.(string)
+
+	var upnote dbutil.Notes
+
+	dbutil.DBcon.Where("id = ?", modnotes.NoteID).Find(&upnote)
+
+	println(uerid)
+	println("ll")
+	println(upnote.UserId)
+
+	if uerid != upnote.UserId {
+		type errdb struct {
+			Msg string `json:"msg"`
+		}
+
+		println("invalid user")
+		w.WriteHeader(http.StatusForbidden)
+		var payload errdb
+		payload.Msg = "unauthorized"
+		json.NewEncoder(w).Encode(payload)
+
+	} else {
+		dbutil.DBcon.Model(&notes).Where("id = ?", modnotes.NoteID).Update("pinned", modnotes.Pinned)
+
+		type payload struct {
+			Msg string `json:"msg"`
+		}
+
+		var payloadsend payload
+		payloadsend.Msg = "success"
+		fmt.Println("Endpoint Hit: update notes")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(payloadsend)
+	}
+
+}
+
+func GetTrashall(w http.ResponseWriter, r *http.Request) {
+
+	// get the body of our POST request
+	// return the string response containing the request body
+
+	userid12121 := context.Get(r, "Userid")
+	println(userid12121.(string))
+	uerid := userid12121.(string)
+	// db.Where("name = ?", "jinzhu").First(&user)
+	notes := []dbutil.Notes{}
+	// dbutil.DBcon.Find(&notes).Where("userid = ?", uerid)
+	dbutil.DBcon.Where("user_id = ? AND active = ?", uerid, false).Order("updated desc").Find(&notes)
+
+	var user dbutil.User
+
+	dbutil.DBcon.Where("user_id = ? ", uerid).Find(&user)
+
+	type payload struct {
+		Username string         `json:"username"`
+		Notes    []dbutil.Notes `json:"notes"`
+	}
+
+	var payloadsend payload
+
+	payloadsend.Notes = notes
+	payloadsend.Username = user.Name
+
+	fmt.Println("Endpoint Hit: Get all notes")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(payloadsend)
+
+}

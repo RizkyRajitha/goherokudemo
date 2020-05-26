@@ -10,8 +10,8 @@ import (
 	"github.com/RizkyRajitha/goherokudemo/auth"
 	"github.com/RizkyRajitha/goherokudemo/dbutil"
 	jwthelper "github.com/RizkyRajitha/goherokudemo/middleware"
+	"github.com/RizkyRajitha/goherokudemo/websocket"
 	"github.com/gorilla/handlers"
-
 	"github.com/gorilla/mux"
 )
 
@@ -33,6 +33,86 @@ func GetPort() string {
 	}
 	return ":" + port
 }
+
+func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
+
+	params := mux.Vars(r)
+
+	id := params["id"]
+
+	println(id)
+
+	ws, err := websocket.Upgrade(w, r)
+
+	if err != nil {
+		// fmt.Fprintf(w, "%+V\n", err)
+	}
+
+	println(r.RequestURI)
+
+	client := &websocket.Client{
+		ID:   id,
+		Conn: ws,
+		Pool: pool,
+	}
+
+	pool.Register <- client
+	client.Read()
+
+	// websocket.Writer(ws)
+	// websocket.Reader(ws)
+
+}
+
+// We'll need to define an Upgrader
+// this will require a Read and Write buffer size
+// var upgrader = websocket.Upgrader{
+// 	ReadBufferSize:  1024,
+// 	WriteBufferSize: 1024,
+
+// 	// We'll need to check the origin of our connection
+// 	// this will allow us to make requests from our React
+// 	// development server to here.
+// 	// For now, we'll do no checking and just allow any connection
+// 	CheckOrigin: func(r *http.Request) bool { return true },
+// }
+
+// // define a reader which will listen for
+// // new messages being sent to our WebSocket
+// // endpoint
+// func reader(conn *websocket.Conn) {
+// 	for {
+// 		// read in a message
+// 		messageType, p, err := conn.ReadMessage()
+// 		if err != nil {
+// 			log.Println(err)
+// 			return
+// 		}
+// 		// print out that message for clarity
+// 		fmt.Println(string(p))
+
+// 		if err := conn.WriteMessage(messageType, p); err != nil {
+// 			log.Println(err)
+// 			return
+// 		}
+
+// 	}
+// }
+
+// // define our WebSocket endpoint
+// func serveWs(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Println(r.Host)
+
+// 	// upgrade this connection to a WebSocket
+// 	// connection
+// 	ws, err := upgrader.Upgrade(w, r, nil)
+// 	if err != nil {
+// 		log.Println(err)
+// 	}
+// 	// listen indefinitely for new messages coming
+// 	// through on our WebSocket connection
+// 	reader(ws)
+// }
 
 func main() {
 	fmt.Println("hello")
@@ -58,6 +138,13 @@ func main() {
 	router.HandleFunc("/signup", auth.Signup).Methods("POST")
 	router.HandleFunc("/login", auth.Login).Methods("POST")
 
+	pool := websocket.NewPool()
+	go pool.Start()
+
+	router.HandleFunc("/ws/{id}", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(pool, w, r)
+	})
+
 	userRouter := router.PathPrefix("/api").Subrouter()
 
 	userRouter.Use(jwthelper.Jwthelper)
@@ -66,11 +153,14 @@ func main() {
 	userRouter.HandleFunc("/add", api.Addroute).Methods("POST")
 	userRouter.HandleFunc("/offlinesyncadd", api.OfflinesyncAddroute).Methods("POST")
 	userRouter.HandleFunc("/getall", api.Getall).Methods("GET")
+	userRouter.HandleFunc("/gettrashall", api.GetTrashall).Methods("GET")
 	userRouter.HandleFunc("/update", api.Modify).Methods("POST")
 	userRouter.HandleFunc("/changestate", api.Changenotestate).Methods("POST")
+	userRouter.HandleFunc("/changepinnedstate", api.Changenotepinnned).Methods("POST")
 
 	// contextedMux := AddContext(router)
 
+	//  wshander :=  http.Handle("/ws", serveWs)
 	// Serve static files
 
 	buildHandler := http.FileServer(http.Dir("./build"))
