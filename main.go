@@ -36,13 +36,22 @@ func GetPort() string {
 
 func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 
+	params := mux.Vars(r)
+
+	id := params["id"]
+
+	println(id)
+
 	ws, err := websocket.Upgrade(w, r)
 
 	if err != nil {
 		fmt.Fprintf(w, "%+V\n", err)
 	}
 
+	println(r.RequestURI)
+
 	client := &websocket.Client{
+		ID:   id,
 		Conn: ws,
 		Pool: pool,
 	}
@@ -132,7 +141,7 @@ func main() {
 	pool := websocket.NewPool()
 	go pool.Start()
 
-	router.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/ws/{id}", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(pool, w, r)
 	})
 
@@ -147,6 +156,7 @@ func main() {
 	userRouter.HandleFunc("/gettrashall", api.GetTrashall).Methods("GET")
 	userRouter.HandleFunc("/update", api.Modify).Methods("POST")
 	userRouter.HandleFunc("/changestate", api.Changenotestate).Methods("POST")
+	userRouter.HandleFunc("/changepinnedstate", api.Changenotepinnned).Methods("POST")
 
 	// contextedMux := AddContext(router)
 
@@ -154,7 +164,7 @@ func main() {
 	// Serve static files
 
 	buildHandler := http.FileServer(http.Dir("./build"))
-	router.PathPrefix(`/{rest:[a-zA-Z0-9=\-\/]+}`).Handler(buildHandler)
+	router.PathPrefix("/").Handler(buildHandler)
 
 	// staticHandler := http.StripPrefix("/static/", http.FileServer(http.Dir("/build/static")))
 	// router.PathPrefix("/static/").Handler(staticHandler)
