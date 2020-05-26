@@ -50,7 +50,7 @@ func GetDbConnString() string {
 	} else if hostip == "localhost" {
 		println("INFO: Countinious intergration DB environment variable detected := " + connstr)
 	} else {
-		connstr = "host=" + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword + " sslmode=enable"
+		connstr = "host=" + hostip + " port=5432 user=" + dbuser + " dbname=" + dbuser + " password=" + dbpassword 
 		println("INFO: Production DB environment variable detected := " + connstr)
 	}
 	// println("INFO: DB environment variable detected, defaulting to " + connstr)
